@@ -7,6 +7,7 @@ import Timetable from "./pages/Timetable";
 import Navigation from "./pages/Navigation";
 import Admin from "./pages/Admin";
 import AIAssistant from "./pages/AIAssistant";
+import Signup from "./pages/Signup";
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/timetable" element={<Timetable />} />
         <Route path="/navigation" element={<Navigation />} />
         <Route path="/ai" element={<AIAssistant />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );

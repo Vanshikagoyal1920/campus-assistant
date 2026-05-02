@@ -1,10 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import {
-  Clock,
-  MapPin,
-  Sparkles,
-} from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
+import axios from "axios";
 
 const DAYS = [
   "Monday",
@@ -12,67 +9,47 @@ const DAYS = [
   "Wednesday",
   "Thursday",
   "Friday",
+  "Saturday",
 ];
 
-const SCHEDULE = {
-  Monday: [
-    {
-      time: "9:00–10:00",
-      subject: "Data Structures",
-      room: "B204",
-      faculty: "Dr. Sharma",
-      type: "Theory",
-    },
-
-    {
-      time: "11:00–12:00",
-      subject: "DBMS",
-      room: "A101",
-      faculty: "Dr. Gupta",
-      type: "Theory",
-    },
-
-    {
-      time: "2:00–4:00",
-      subject: "OS Lab",
-      room: "Lab-3",
-      faculty: "Mr. Verma",
-      type: "Lab",
-    },
-  ],
-
-  Tuesday: [
-    {
-      time: "9:00–10:00",
-      subject: "Computer Networks",
-      room: "B101",
-      faculty: "Dr. Khan",
-      type: "Theory",
-    },
-
-    {
-      time: "3:00–4:00",
-      subject: "Maths IV",
-      room: "C105",
-      faculty: "Dr. Jain",
-      type: "Theory",
-    },
-  ],
-};
+const today =
+  DAYS[new Date().getDay() - 1] || "Monday";
 
 export default function Timetable() {
-  const [activeDay, setActiveDay] =
-    useState("Monday");
+  const [activeDay, setActiveDay] = useState(today);
+  const [timetableData, setTimetableData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const slots =
-    SCHEDULE[activeDay] || [];
+  // FETCH DATA FROM BACKEND
+  useEffect(() => {
+    fetchTimetable();
+  }, []);
+
+  const fetchTimetable = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/timetable"
+      );
+
+      setTimetableData(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching timetable:", error);
+      setLoading(false);
+    }
+  };
+
+  // FILTER DATA BY DAY
+  const daySlots = timetableData.filter(
+    (item) => item.day === activeDay
+  );
 
   return (
     <div
       style={{
         display: "flex",
         minHeight: "100vh",
-        background: "#0b1020",
+        background: "#0c0f14",
       }}
     >
       <Sidebar />
@@ -85,26 +62,27 @@ export default function Timetable() {
           fontFamily: "'DM Sans', sans-serif",
         }}
       >
-        {/* HEADER */}
-
-        <div style={{ marginBottom: 28 }}>
+        {/* Header */}
+        <div style={{ marginBottom: 32 }}>
           <p
             style={{
-              color: "#38bdf8",
-              fontSize: 12,
-              letterSpacing: "0.12em",
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
+              color: "#60a5fa",
+              letterSpacing: "0.1em",
               textTransform: "uppercase",
-              marginBottom: 10,
+              marginBottom: 8,
             }}
           >
-            Academic Schedule
+            Dynamic Timetable
           </p>
 
           <h1
             style={{
-              fontSize: 40,
-              color: "#f8fafc",
-              marginBottom: 12,
+              fontFamily: "'Instrument Serif', serif",
+              fontSize: 32,
+              fontWeight: 400,
+              color: "#f0f2f5",
             }}
           >
             Class Timetable
@@ -112,259 +90,168 @@ export default function Timetable() {
 
           <p
             style={{
-              color: "#cbd5e1",
-              lineHeight: 1.7,
+              fontSize: 14,
+              color: "#4a5260",
+              marginTop: 4,
             }}
           >
-            B.Tech CSE · Semester 6 ·
-            ABES Engineering College
+            Live timetable from backend
           </p>
         </div>
 
-        {/* AI INSIGHT */}
-
+        {/* Day Tabs */}
         <div
           style={{
-            background:
-              "linear-gradient(135deg, rgba(56,189,248,0.14), rgba(129,140,248,0.1))",
-
-            border:
-              "1px solid rgba(56,189,248,0.14)",
-
-            borderRadius: 20,
-
-            padding: "24px",
-
-            marginBottom: 30,
-
             display: "flex",
-            justifyContent:
-              "space-between",
-
-            alignItems: "center",
+            gap: 8,
+            marginBottom: 32,
+            flexWrap: "wrap",
           }}
         >
-          <div>
-            <p
-              style={{
-                color: "#38bdf8",
-                fontSize: 12,
-                textTransform: "uppercase",
-                marginBottom: 8,
-              }}
-            >
-              AI Schedule Insight
-            </p>
+          {DAYS.map((day) => {
+            const isActive = day === activeDay;
 
-            <h3
-              style={{
-                color: "#f8fafc",
-                fontSize: 24,
-                marginBottom: 8,
-              }}
-            >
-              You have 3 classes today
-            </h3>
+            return (
+              <button
+                key={day}
+                onClick={() => setActiveDay(day)}
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: 10,
+                  border: isActive
+                    ? "1px solid rgba(96,165,250,0.35)"
+                    : "1px solid rgba(255,255,255,0.08)",
+                  background: isActive
+                    ? "rgba(96,165,250,0.1)"
+                    : "transparent",
+                  color: isActive
+                    ? "#60a5fa"
+                    : "#8892a0",
+                  cursor: "pointer",
+                  fontSize: 13,
+                }}
+              >
+                {day}
+              </button>
+            );
+          })}
+        </div>
 
-            <p
-              style={{
-                color: "#cbd5e1",
-                lineHeight: 1.6,
-              }}
-            >
-              Operating Systems Lab starts
-              in 45 minutes at Lab-3.
-            </p>
-          </div>
-
+        {/* Loading */}
+        {loading ? (
+          <p style={{ color: "#8892a0" }}>
+            Loading timetable...
+          </p>
+        ) : daySlots.length === 0 ? (
+          <p style={{ color: "#8892a0" }}>
+            No lectures found for {activeDay}
+          </p>
+        ) : (
           <div
             style={{
-              width: 72,
-              height: 72,
-              borderRadius: "50%",
-              background:
-                "linear-gradient(135deg,#38bdf8,#818cf8)",
-
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              flexDirection: "column",
+              gap: 12,
             }}
           >
-            <Sparkles
-              size={26}
-              color="white"
-            />
-          </div>
-        </div>
+            {daySlots.map((slot) => (
+              <div
+                key={slot._id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "160px 1fr auto",
+                  gap: 20,
+                  alignItems: "center",
+                  background: "#131720",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: 14,
+                  padding: "18px 22px",
+                }}
+              >
+                {/* Time */}
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      color: "#60a5fa",
+                      fontSize: 13,
+                      marginBottom: 6,
+                    }}
+                  >
+                    <Clock size={14} />
 
-        {/* DAY BUTTONS */}
+                    {slot.startTime} - {slot.endTime}
+                  </div>
 
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            marginBottom: 30,
-          }}
-        >
-          {DAYS.map((day) => (
-            <button
-              key={day}
-              onClick={() =>
-                setActiveDay(day)
-              }
+                  <span
+                    style={{
+                      fontSize: 11,
+                      color:
+                        slot.type === "Lab"
+                          ? "#f59e0b"
+                          : "#4ade80",
+                    }}
+                  >
+                    {slot.type}
+                  </span>
+                </div>
 
-              style={{
-                padding: "10px 18px",
+                {/* Subject */}
+                <div>
+                  <h3
+                    style={{
+                      color: "#f0f2f5",
+                      fontSize: 16,
+                      marginBottom: 4,
+                    }}
+                  >
+                    {slot.subject}
+                  </h3>
 
-                borderRadius: 999,
+                  <p
+                    style={{
+                      color: "#8892a0",
+                      fontSize: 13,
+                    }}
+                  >
+                    {slot.subjectCode}
+                  </p>
 
-                border:
-                  activeDay === day
-                    ? "1px solid rgba(56,189,248,0.28)"
-                    : "1px solid rgba(255,255,255,0.08)",
+                  <p
+                    style={{
+                      color: "#4a5260",
+                      fontSize: 12,
+                      marginTop: 4,
+                    }}
+                  >
+                    Faculty: {slot.faculty}
+                  </p>
+                </div>
 
-                background:
-                  activeDay === day
-                    ? "rgba(56,189,248,0.12)"
-                    : "transparent",
-
-                color:
-                  activeDay === day
-                    ? "#38bdf8"
-                    : "#cbd5e1",
-
-                cursor: "pointer",
-              }}
-            >
-              {day}
-            </button>
-          ))}
-        </div>
-
-        {/* SLOTS */}
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
-        >
-          {slots.map((slot, index) => (
-            <div
-              key={index}
-              style={{
-                background: "#111827",
-
-                border:
-                  "1px solid rgba(255,255,255,0.06)",
-
-                borderRadius: 20,
-
-                padding: "22px",
-
-                display: "grid",
-
-                gridTemplateColumns:
-                  "180px 1fr auto",
-
-                alignItems: "center",
-
-                gap: 20,
-              }}
-            >
-              {/* TIME */}
-
-              <div>
+                {/* Room */}
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
-
-                    color: "#38bdf8",
-
-                    marginBottom: 8,
+                    padding: "8px 14px",
+                    borderRadius: 10,
+                    background: "rgba(255,255,255,0.04)",
+                    border:
+                      "1px solid rgba(255,255,255,0.08)",
+                    color: "#8892a0",
+                    fontSize: 13,
                   }}
                 >
-                  <Clock size={15} />
-
-                  {slot.time}
+                  <MapPin size={14} />
+                  {slot.room}
                 </div>
-
-                <span
-                  style={{
-                    background:
-                      slot.type === "Lab"
-                        ? "rgba(244,114,182,0.12)"
-                        : "rgba(129,140,248,0.12)",
-
-                    color:
-                      slot.type === "Lab"
-                        ? "#f472b6"
-                        : "#818cf8",
-
-                    padding: "4px 8px",
-
-                    borderRadius: 6,
-
-                    fontSize: 11,
-                  }}
-                >
-                  {slot.type}
-                </span>
               </div>
-
-              {/* SUBJECT */}
-
-              <div>
-                <h2
-                  style={{
-                    color: "#f8fafc",
-                    fontSize: 22,
-                    marginBottom: 8,
-                  }}
-                >
-                  {slot.subject}
-                </h2>
-
-                <p
-                  style={{
-                    color: "#cbd5e1",
-                    fontSize: 14,
-                  }}
-                >
-                  {slot.faculty}
-                </p>
-              </div>
-
-              {/* ROOM */}
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-
-                  background:
-                    "rgba(255,255,255,0.04)",
-
-                  border:
-                    "1px solid rgba(255,255,255,0.08)",
-
-                  padding: "10px 14px",
-
-                  borderRadius: 12,
-
-                  color: "#cbd5e1",
-                }}
-              >
-                <MapPin size={15} />
-                {slot.room}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
