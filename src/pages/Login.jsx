@@ -1,57 +1,30 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-
-import {
-  ArrowRight,
-  BookOpen,
-  Zap,
-  MapPin,
-  Sparkles,
-  ShieldCheck,
-  GraduationCap,
-  Bot,
-} from "lucide-react";
-
-const FEATURES = [
-  {
-    icon: BookOpen,
-    label: "Academic Assistant",
-    desc: "Syllabus, attendance, exams & results",
-  },
-
-  {
-    icon: Zap,
-    label: "Live Campus Updates",
-    desc: "Placements, workshops & events",
-  },
-
-  {
-    icon: MapPin,
-    label: "Smart Navigation",
-    desc: "Labs, rooms & buildings instantly",
-  },
-];
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
 
-  const [roll, setRoll] = useState("");
-  const [pass, setPass] = useState("");
+  const [formData, setFormData] = useState({
+    rollNo: "",
+    password: "",
+  });
 
-  const [role, setRole] =
-    useState("student");
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const [loading, setLoading] =
-    useState(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleLogin = () => {
-    setLoading(true);
+    console.log(formData);
 
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 800);
+    // Backend API integration later
+
+    navigate("/dashboard");
   };
 
   return (
@@ -59,146 +32,69 @@ export default function Login() {
       style={{
         minHeight: "100vh",
         display: "grid",
-        gridTemplateColumns: "1.1fr 0.9fr",
+        gridTemplateColumns: "1fr 1fr",
         background: "#050816",
         fontFamily: "'DM Sans', sans-serif",
-        overflow: "hidden",
-        position: "relative",
       }}
     >
-      {/* BACKGROUND LIGHT */}
-
-      <div
-        style={{
-          position: "absolute",
-          width: 500,
-          height: 500,
-          borderRadius: "50%",
-          background:
-            "rgba(6,182,212,0.12)",
-          filter: "blur(120px)",
-          top: -180,
-          left: -120,
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          width: 500,
-          height: 500,
-          borderRadius: "50%",
-          background:
-            "rgba(139,92,246,0.12)",
-          filter: "blur(120px)",
-          bottom: -200,
-          right: -120,
-        }}
-      />
-
-      {/* LEFT PANEL */}
-
+      {/* LEFT SECTION */}
       <div
         style={{
           position: "relative",
           overflow: "hidden",
-          borderRight:
-            "1px solid rgba(255,255,255,0.06)",
         }}
       >
-        {/* IMAGE */}
-
+        {/* Background Image */}
         <img
-          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1400&auto=format&fit=crop"
-          alt="students"
-
+          src="/hero.png"
+          alt="campus"
           style={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            transform: "scale(1.04)",
+            filter: "brightness(40%)",
           }}
         />
 
-        {/* OVERLAY */}
-
+        {/* Overlay Content */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(to top, rgba(5,8,22,0.98), rgba(5,8,22,0.55), rgba(5,8,22,0.25))",
-          }}
-        />
-
-        {/* CONTENT */}
-
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            padding: "56px",
+            padding: "60px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            zIndex: 2,
           }}
         >
-          {/* TOP */}
-
           <div>
+            {/* Badge */}
             <div
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 10,
-                background:
-                  "rgba(255,255,255,0.08)",
-                border:
-                  "1px solid rgba(255,255,255,0.08)",
-                backdropFilter: "blur(10px)",
-                borderRadius: 999,
+                gap: "8px",
                 padding: "10px 18px",
-                marginBottom: 34,
+                borderRadius: "999px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "#fff",
+                fontSize: "14px",
+                marginBottom: "40px",
               }}
             >
-              <Bot
-                size={16}
-                color="#22d3ee"
-              />
-
-              <span
-                style={{
-                  color: "#e2e8f0",
-                  fontSize: 13,
-                  fontWeight: 500,
-                }}
-              >
-                Agentic AI Platform
-              </span>
+              <Sparkles size={16} />
+              Agentic AI Platform
             </div>
 
-            <p
-              style={{
-                color: "#22d3ee",
-                fontSize: 12,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                marginBottom: 18,
-                fontWeight: 600,
-              }}
-            >
-              Smart Campus Ecosystem
-            </p>
-
+            {/* Heading */}
             <h1
               style={{
-                fontSize: 82,
-                lineHeight: 0.92,
+                fontSize: "90px",
+                lineHeight: "0.95",
                 color: "white",
-                marginBottom: 24,
-                fontWeight: 800,
-                letterSpacing: "-0.05em",
+                fontWeight: "700",
+                marginBottom: "30px",
               }}
             >
               Campus
@@ -206,144 +102,59 @@ export default function Login() {
               Assistant
             </h1>
 
+            {/* Description */}
             <p
               style={{
-                color: "#cbd5e1",
-                fontSize: 17,
-                lineHeight: 1.9,
-                maxWidth: 520,
+                color: "rgba(255,255,255,0.75)",
+                fontSize: "20px",
+                lineHeight: "1.8",
+                maxWidth: "620px",
               }}
             >
-              AI-powered campus companion
-              for timetable management,
-              academics, placements,
-              navigation, and real-time
-              student assistance.
+              AI-powered campus companion for timetable
+              management, academics, placements, navigation,
+              and real-time student assistance.
             </p>
-
-            {/* FEATURES */}
-
-            <div
-              style={{
-                marginTop: 42,
-                display: "flex",
-                flexDirection: "column",
-                gap: 18,
-              }}
-            >
-              {FEATURES.map(
-                ({
-                  icon: Icon,
-                  label,
-                  desc,
-                }) => (
-                  <div
-                    key={label}
-                    style={{
-                      display: "flex",
-                      gap: 14,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 42,
-                        height: 42,
-                        borderRadius: 14,
-                        background:
-                          "rgba(6,182,212,0.12)",
-                        border:
-                          "1px solid rgba(6,182,212,0.18)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <Icon
-                        size={18}
-                        color="#22d3ee"
-                      />
-                    </div>
-
-                    <div>
-                      <p
-                        style={{
-                          color: "white",
-                          fontSize: 15,
-                          fontWeight: 600,
-                          marginBottom: 4,
-                        }}
-                      >
-                        {label}
-                      </p>
-
-                      <p
-                        style={{
-                          color: "#94a3b8",
-                          fontSize: 13,
-                        }}
-                      >
-                        {desc}
-                      </p>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
           </div>
 
-          {/* FOOTER */}
-
+          {/* Bottom Stats */}
           <div
             style={{
               display: "flex",
-              gap: 16,
+              gap: "20px",
+              marginTop: "40px",
             }}
           >
             {[
-              {
-                value: "24/7",
-                label: "AI Support",
-              },
-
-              {
-                value: "12K+",
-                label: "Students",
-              },
-
-              {
-                value: "4",
-                label: "AI Agents",
-              },
+              { number: "24/7", label: "AI Support" },
+              { number: "12K+", label: "Students" },
+              { number: "4", label: "AI Agents" },
             ].map((item) => (
               <div
                 key={item.label}
                 style={{
-                  background:
-                    "rgba(255,255,255,0.06)",
-                  border:
-                    "1px solid rgba(255,255,255,0.08)",
-                  backdropFilter:
-                    "blur(10px)",
-                  borderRadius: 20,
-                  padding: "16px 20px",
-                  minWidth: 120,
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  padding: "28px",
+                  borderRadius: "24px",
+                  minWidth: "150px",
+                  backdropFilter: "blur(10px)",
                 }}
               >
-                <h3
+                <h2
                   style={{
                     color: "white",
-                    fontSize: 26,
-                    marginBottom: 6,
+                    fontSize: "42px",
+                    marginBottom: "10px",
                   }}
                 >
-                  {item.value}
-                </h3>
+                  {item.number}
+                </h2>
 
                 <p
                   style={{
-                    color: "#94a3b8",
-                    fontSize: 12,
+                    color: "rgba(255,255,255,0.7)",
+                    fontSize: "16px",
                   }}
                 >
                   {item.label}
@@ -354,277 +165,170 @@ export default function Login() {
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
-
+      {/* RIGHT SECTION */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "60px",
-          position: "relative",
-          zIndex: 2,
+          background:
+            "radial-gradient(circle at top, #07152f 0%, #020617 70%)",
+          padding: "40px",
         }}
       >
         <div
           style={{
             width: "100%",
-            maxWidth: 420,
+            maxWidth: "520px",
           }}
         >
-          {/* ICON */}
-
+          {/* Logo */}
           <div
             style={{
-              width: 78,
-              height: 78,
-              borderRadius: 24,
+              width: "90px",
+              height: "90px",
+              borderRadius: "28px",
               background:
                 "linear-gradient(135deg,#06b6d4,#8b5cf6)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: 30,
-              boxShadow:
-                "0 0 40px rgba(6,182,212,0.3)",
+              marginBottom: "40px",
+              boxShadow: "0 0 50px rgba(59,130,246,0.3)",
             }}
           >
-            <Sparkles
-              size={32}
-              color="white"
-            />
+            <Sparkles size={42} color="white" />
           </div>
 
-          {/* TITLE */}
-
-          <h2
+          {/* Heading */}
+          <h1
             style={{
               color: "white",
-              fontSize: 44,
-              lineHeight: 1.1,
-              marginBottom: 14,
-              fontWeight: 700,
+              fontSize: "72px",
+              lineHeight: "1",
+              marginBottom: "20px",
+              fontWeight: "700",
             }}
           >
             Welcome Back 👋
-          </h2>
+          </h1>
 
           <p
             style={{
-              color: "#94a3b8",
-              lineHeight: 1.8,
-              fontSize: 15,
-              marginBottom: 34,
+              color: "rgba(255,255,255,0.65)",
+              fontSize: "22px",
+              marginBottom: "50px",
             }}
           >
-            Continue to your AI-powered
-            campus workspace.
+            Continue to your AI-powered campus workspace.
           </p>
 
-          {/* ROLE */}
-
-          <div
-            style={{
-              display: "flex",
-              gap: 14,
-              marginBottom: 28,
-            }}
-          >
-            {[
-              {
-                key: "student",
-                label: "Student",
-                icon: GraduationCap,
-                gradient:
-                  "linear-gradient(135deg,#06b6d4,#3b82f6)",
-              },
-
-              {
-                key: "admin",
-                label: "Admin",
-                icon: ShieldCheck,
-                gradient:
-                  "linear-gradient(135deg,#8b5cf6,#d946ef)",
-              },
-            ].map((item) => {
-              const Icon = item.icon;
-
-              const active =
-                role === item.key;
-
-              return (
-                <button
-                  key={item.key}
-                  onClick={() =>
-                    setRole(item.key)
-                  }
-
-                  style={{
-                    flex: 1,
-                    height: 90,
-                    borderRadius: 24,
-                    border: active
-                      ? "none"
-                      : "1px solid rgba(255,255,255,0.08)",
-                    background: active
-                      ? item.gradient
-                      : "rgba(255,255,255,0.04)",
-                    color: "white",
-                    cursor: "pointer",
-                    display: "flex",
-                    flexDirection:
-                      "column",
-                    alignItems: "center",
-                    justifyContent:
-                      "center",
-                    gap: 10,
-                  }}
-                >
-                  <Icon size={24} />
-
-                  <span
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* INPUTS */}
-
-          <div
+          {/* Form */}
+          <form
+            onSubmit={handleSubmit}
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: 18,
+              gap: "24px",
             }}
           >
+            {/* Roll Number */}
             <input
               type="text"
-              value={roll}
-              onChange={(e) =>
-                setRoll(e.target.value)
-              }
-
-              placeholder={
-                role === "student"
-                  ? "Enter Roll Number"
-                  : "Enter Admin ID"
-              }
-
-              style={{
-                width: "100%",
-                height: 66,
-                borderRadius: 20,
-                border:
-                  "1px solid rgba(255,255,255,0.08)",
-                background:
-                  "rgba(255,255,255,0.04)",
-                color: "white",
-                fontSize: 15,
-                outline: "none",
-                padding: "0 22px",
-              }}
+              placeholder="Enter Roll Number"
+              name="rollNo"
+              value={formData.rollNo}
+              onChange={handleChange}
+              required
+              style={inputStyle}
             />
 
+            {/* Password */}
             <input
               type="password"
-              value={pass}
-              onChange={(e) =>
-                setPass(e.target.value)
-              }
-
               placeholder="Enter Password"
-
-              style={{
-                width: "100%",
-                height: 66,
-                borderRadius: 20,
-                border:
-                  "1px solid rgba(255,255,255,0.08)",
-                background:
-                  "rgba(255,255,255,0.04)",
-                color: "white",
-                fontSize: 15,
-                outline: "none",
-                padding: "0 22px",
-              }}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              style={inputStyle}
             />
-          </div>
 
-          {/* BUTTON */}
+            {/* Login Button */}
+            <button
+              type="submit"
+              style={{
+                height: "78px",
+                borderRadius: "24px",
+                border: "none",
+                background:
+                  "linear-gradient(90deg,#06b6d4,#3b82f6)",
+                color: "white",
+                fontSize: "28px",
+                fontWeight: "600",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "14px",
+                marginTop: "10px",
+                boxShadow: "0 0 40px rgba(59,130,246,0.25)",
+              }}
+            >
+              Continue to Dashboard
+              <ArrowRight size={28} />
+            </button>
 
-          <button
-            onClick={handleLogin}
-            disabled={loading}
+            {/* Signup Link */}
+            <p
+              style={{
+                textAlign: "center",
+                marginTop: "18px",
+                color: "rgba(255,255,255,0.65)",
+                fontSize: "18px",
+              }}
+            >
+              Not registered yet?{" "}
 
-            style={{
-              width: "100%",
-              marginTop: 28,
-              height: 68,
-              border: "none",
-              borderRadius: 22,
-              background:
-                role === "student"
-                  ? "linear-gradient(135deg,#06b6d4,#3b82f6)"
-                  : "linear-gradient(135deg,#8b5cf6,#d946ef)",
-              color: "white",
-              fontSize: 16,
-              fontWeight: 700,
-              cursor: loading
-                ? "not-allowed"
-                : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              boxShadow:
-                "0 14px 40px rgba(6,182,212,0.22)",
-            }}
-          >
-            {loading
-              ? "Signing in..."
-              : "Continue to Dashboard"}
+              <Link
+                to="/signup"
+                style={{
+                  color: "#38bdf8",
+                  textDecoration: "none",
+                  fontWeight: "600",
+                }}
+              >
+                Sign Up
+              </Link>
+            </p>
 
-            {!loading && (
-              <ArrowRight size={18} />
-            )}
-          </button>
-
-          {/* FOOTER */}
-
-          <p
-            style={{
-              marginTop: 26,
-              textAlign: "center",
-              fontSize: 12,
-              color: "#64748b",
-              lineHeight: 1.7,
-            }}
-          >
-            Secure AI-powered campus
-            management platform
-          </p>
+            {/* Footer */}
+            <p
+              style={{
+                textAlign: "center",
+                color: "rgba(255,255,255,0.3)",
+                fontSize: "15px",
+                marginTop: "10px",
+              }}
+            >
+              Secure AI-powered campus management platform
+            </p>
+          </form>
         </div>
       </div>
-
-      {/* MOBILE */}
-
-      <style>{`
-        @media (max-width: 900px) {
-          div[style*="gridTemplateColumns"] {
-            grid-template-columns: 1fr !important;
-          }
-
-          div[style*="gridTemplateColumns"] > div:first-child {
-            display: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }
+
+const inputStyle = {
+  width: "100%",
+  height: "78px",
+  borderRadius: "24px",
+  border: "1px solid rgba(255,255,255,0.08)",
+  background: "rgba(255,255,255,0.03)",
+  padding: "0 28px",
+  color: "white",
+  fontSize: "22px",
+  outline: "none",
+  backdropFilter: "blur(10px)",
+};
